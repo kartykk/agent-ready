@@ -14,7 +14,7 @@ description: Finish a BOARD row. Update NOW and create a local git commit. Never
 .agents/scripts/agent-commit.sh "chore(agents): W-NNN short title" <paths>
 ```
 
-That script also writes a snapshot under `.agents/snapshots/` and `git push local` if the offline remote exists. It still does **not** push to GitHub.
+That script also writes a snapshot, `git push local` if the offline remote exists, and plays **committed**. It still does **not** push to GitHub.
 
 5. If the script errors, fix staging — do not add unrelated dirty files.
 6. **Do not** `git push`. Human says push.

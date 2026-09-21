@@ -1,0 +1,12 @@
+.agents/local-git/
+.agents/worktrees/
+.agents/snapshots/*/
+!.agents/SNAPSHOTS.md
+.env
+.env.*
+!.env.example
+node_modules/
+.DS_Store
+*.log
+.venv/
+__pycache__/

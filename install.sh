@@ -79,6 +79,12 @@ if [[ -n "$name" ]]; then
   fi
 fi
 
+# Claude Code hooks (sound + overlay reminder even if the model ignores AGENTS.md)
+mkdir -p "$target/.claude/hooks"
+cp "$KIT/.claude/hooks/"*.sh "$target/.claude/hooks/" 2>/dev/null || true
+chmod +x "$target/.claude/hooks/"*.sh 2>/dev/null || true
+copy_if "$KIT/.claude/settings.json" "$target/.claude/settings.json"
+
 # Thin Claude skill links (best-effort)
 if command -v ln >/dev/null; then
   mkdir -p "$target/.claude/skills"

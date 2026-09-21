@@ -54,6 +54,19 @@ for f in AGENTS.md CLAUDE.md GEMINI.md QWEN.md .cursorrules .gitignore; do
   copy_if "$KIT/$f" "$target/$f"
 done
 copy_if "$KIT/.github/copilot-instructions.md" "$target/.github/copilot-instructions.md"
+# Voice: clips + notify (always refresh notify.py; keep dest clips if present)
+mkdir -p "$target/voice/clips"
+cp "$KIT/voice/notify.py" "$target/voice/notify.py"
+copy_if "$KIT/voice/README.md" "$target/voice/README.md"
+copy_if "$KIT/requirements-voice.txt" "$target/requirements-voice.txt"
+if [[ -d "$KIT/voice/clips" ]]; then
+  for w in "$KIT/voice/clips"/*.wav; do
+    [[ -f "$w" ]] || continue
+    base="$(basename "$w")"
+    copy_if "$w" "$target/voice/clips/$base"
+  done
+fi
+# say.sh lives in scripts (already copied)
 
 if [[ -n "$name" ]]; then
   if grep -q 'TODO product name' "$target/NAMES.md" 2>/dev/null; then

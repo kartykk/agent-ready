@@ -8,5 +8,6 @@
 node_modules/
 .DS_Store
 *.log
+voice/cache/
 .venv/
 __pycache__/

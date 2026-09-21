@@ -1,0 +1,5 @@
+edge-tts>=6.1.0
+soundfile>=0.12.1
+numpy>=1.26.4
+# optional local male Echo for reused clips:
+# kokoro>=0.3.4

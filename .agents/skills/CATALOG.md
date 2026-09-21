@@ -41,3 +41,4 @@ Weaker models: pick **one** skill from “When” and read that `SKILL.md` befor
 | Git / push / .env | `git-safety` |
 | Tokens, keys, passwords | `no-secrets` |
 | Finished the one task | `stop-when-done` |
+| Play done / need-help sound | `speak-status` |

@@ -7,7 +7,7 @@ fail=0
 say() { echo "$*"; }
 bad() { echo "FAIL: $*" >&2; fail=1; }
 
-need=(AGENTS.md GOAL.md ARCHITECTURE.md STATUS.md NOW.md LEGACY.md NAMES.md CLAUDE.md .agents/PROTOCOL.md .agents/work/BOARD.md .agents/SESSIONS.md .agents/CONTINUE.md)
+need=(AGENTS.md GOAL.md ARCHITECTURE.md STATUS.md NOW.md LEGACY.md NAMES.md CLAUDE.md .agents/PROTOCOL.md .agents/work/BOARD.md .agents/SESSIONS.md .agents/CONTINUE.md voice/notify.py)
 for f in "${need[@]}"; do
   [[ -f "$f" ]] || bad "missing $f"
 done

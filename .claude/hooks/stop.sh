@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
-# End of Claude/Grok turn → human's turn sound. Never block the stop.
+# Speak the last reply (Edge TTS). Never block stop.
 set +e
 ROOT="${CLAUDE_PROJECT_DIR:-${GROK_PROJECT_DIR:-}}"
 if [[ -z "$ROOT" ]]; then
   ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 fi
-bash "$ROOT/.agents/scripts/say.sh" your_turn
+export PATH="/usr/bin:/opt/homebrew/bin:$PATH"
+py="${PYTHON:-python3}"
+"$py" "$ROOT/voice/speak_turn.py"
 exit 0

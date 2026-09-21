@@ -1,21 +1,40 @@
 ---
 name: speak-status
-description: Play a short human-touch sound when work finishes or you need the human. done/ok/perfect/need_help plus optional Edge TTS summary.
+description: Play a short reused clip for agent events, then optional Edge TTS summary. Use after finish, block, ask, git, or checks.
 ---
 
 # speak-status
 
-After a finished task, error, or when you need the human:
-
 ```bash
-bash .agents/scripts/say.sh done "one sentence what you did"
-bash .agents/scripts/say.sh perfect
-bash .agents/scripts/say.sh ok
-bash .agents/scripts/say.sh need_help "blocked on X"
-bash .agents/scripts/say.sh error "tests failed"
+bash .agents/scripts/say.sh <clip> "optional unique sentence"
+python3 voice/notify.py list
 ```
 
-- **Clips** (`done`, `ok`, `perfect`, `need_help`, `error`, `start`): reused files in `voice/clips/`. Bake with Kokoro `am_echo` if installed: `python3 voice/notify.py bake --engine kokoro`.
-- **Summary text**: Edge TTS (free). Unique sentences only. Keep to one short line.
+**Clip + Edge:** clip is reused wav; extra words are Edge TTS (once).
 
-Do not speak secrets. Do not fail the task if audio is missing.
+## Clips
+
+Presence: `ready` `start` `resume` `thinking` `wait`  
+Progress: `ok` `progress` `update` `halfway` `almost`  
+Success: `done` `perfect` `shipped` `committed` `passed` `all_clear` `installed` `check_ok`  
+Human: `hey` `question` `confirm` `review` `your_turn` `handoff` `thanks` `bye`  
+Problems: `need_help` `blocked` `warning` `error` `failed` `conflict` `timeout` `refused` `secret` `check_fail`  
+Work: `snapshot` `new_task` `claimed`
+
+## When
+
+| Event | Clip |
+|-------|------|
+| Session open | `ready` or `start` |
+| Still working | `wait` / `thinking` / `progress` |
+| Need a decision | `question` or `confirm` |
+| Task finished | `done` + one-line Edge summary |
+| Git commit | `committed` |
+| Tests / check.sh | `passed` / `check_ok` or `failed` / `check_fail` |
+| Frozen path / refuse | `refused` |
+| Stuck | `blocked` or `need_help` |
+| Pass to another AI | `handoff` |
+| Human should look | `review` / `your_turn` |
+
+Do not speak secrets. Do not fail the task if audio is missing.  
+Bake Kokoro Echo: `python3 voice/notify.py bake --engine kokoro`

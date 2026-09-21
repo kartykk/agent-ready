@@ -47,7 +47,7 @@ done < <(git diff --cached --name-only | grep -E '(^|/)\.env(\.|$)' | grep -v '\
 git commit -m "$msg" -m "Co-Authored-By: agent <agent@local>"
 echo "committed locally. not pushed."
 bash "$(dirname "$0")/snapshot.sh" "$msg" || true
-bash "$(dirname "$0")/say.sh" done "$msg" >/dev/null 2>&1 || true
+bash "$(dirname "$0")/say.sh" committed "$msg" >/dev/null 2>&1 || true
 # Offline backup if local remote exists
 git push local HEAD >/dev/null 2>&1 || true
 git status -sb | head -5

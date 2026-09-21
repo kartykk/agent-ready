@@ -34,16 +34,70 @@ EDGE_ENABLED = os.environ.get("EDGE_TTS_ENABLED", "true").strip().lower() not in
     "off",
 )
 
-PHRASES = {
-    "done": "Done.",
-    "ok": "Okay.",
-    "perfect": "Perfect.",
-    "need_help": "Need help.",
-    "help": "Need help.",
-    "error": "Error.",
+# Unique reusable clips. Keep to 2–5 words. Unique summaries still use Edge live.
+CLIPS_PHRASES = {
+    # presence
+    "ready": "Ready.",
     "start": "Starting.",
+    "resume": "Resuming.",
+    "thinking": "Thinking.",
     "wait": "Working.",
+    # progress
+    "ok": "Okay.",
+    "progress": "Progress.",
+    "update": "Update.",
+    "halfway": "Halfway.",
+    "almost": "Almost done.",
+    # success
+    "done": "Done.",
+    "perfect": "Perfect.",
+    "shipped": "Shipped.",
+    "committed": "Committed.",
+    "passed": "Tests passed.",
+    "all_clear": "All clear.",
+    "installed": "Installed.",
+    # human
+    "hey": "Hey.",
+    "question": "Question for you.",
+    "confirm": "Need a yes or no.",
+    "review": "Ready for review.",
+    "your_turn": "Your turn.",
+    "handoff": "Handing off.",
+    "thanks": "Thank you.",
+    "bye": "Goodbye.",
+    # problems
+    "need_help": "Need help.",
+    "blocked": "Blocked.",
+    "warning": "Warning.",
+    "error": "Error.",
+    "failed": "Failed.",
+    "conflict": "Conflict.",
+    "timeout": "Timed out.",
+    "refused": "Refused.",
+    "secret": "Secret found.",
+    # work
+    "snapshot": "Snapshot saved.",
+    "new_task": "New task.",
+    "claimed": "Claimed.",
+    "check_ok": "Checks passed.",
+    "check_fail": "Checks failed.",
 }
+
+ALIASES = {
+    "help": "need_help",
+    "working": "wait",
+    "tests_ok": "passed",
+    "tests_passed": "passed",
+    "yes_no": "confirm",
+    "ask": "question",
+    "stop": "refused",
+    "good": "ok",
+    "great": "perfect",
+}
+
+PHRASES = dict(CLIPS_PHRASES)
+for _alias, _canon in ALIASES.items():
+    PHRASES[_alias] = CLIPS_PHRASES[_canon]
 
 try:
     import edge_tts
@@ -218,7 +272,7 @@ def mac_say(text: str) -> None:
 
 
 def clip_path(kind: str) -> Path:
-    key = "need_help" if kind in ("help", "need_help") else kind
+    key = ALIASES.get(kind, kind)
     return CLIPS / f"{key}.wav"
 
 
@@ -226,9 +280,7 @@ def bake(engine: str = "auto") -> None:
     CLIPS.mkdir(parents=True, exist_ok=True)
     use_k = engine == "kokoro" or (engine == "auto" and KOKORO_OK)
     print(f"baking clips engine={'kokoro '+KOKORO_VOICE if use_k else 'edge '+EDGE_VOICE}")
-    for key, phrase in PHRASES.items():
-        if key == "help":
-            continue
+    for key, phrase in CLIPS_PHRASES.items():
         wav = synth_kokoro(phrase) if use_k else None
         if not wav:
             wav = synth_edge(phrase)
@@ -280,7 +332,7 @@ def main() -> int:
         "kind",
         nargs="?",
         default="ok",
-        help="done|ok|perfect|need_help|error|start|wait|bake|say",
+        help="clip name, or bake|say|list",
     )
     p.add_argument("summary", nargs="*", help="optional one-off sentence (Edge TTS)")
     p.add_argument("--engine", choices=("auto", "kokoro", "edge"), default="auto")
@@ -288,6 +340,10 @@ def main() -> int:
     kind = args.kind.replace("-", "_")
     summary = " ".join(args.summary).strip()
 
+    if kind == "list":
+        for k in sorted(CLIPS_PHRASES):
+            print(f"{k:12}  {CLIPS_PHRASES[k]}")
+        return 0
     if kind == "bake":
         bake(args.engine)
         return 0

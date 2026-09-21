@@ -1,16 +1,15 @@
 # Voice (human touch)
 
-| Kind | Engine | When |
-|------|--------|------|
-| `done` `ok` `perfect` `need_help` `error` `start` `wait` | **Kokoro `am_echo`** (male) if installed, else Edge male, cached as wav | Same phrase every time |
-| extra sentence | **Edge TTS** (free, online) | Unique summary |
+| Kind | Engine |
+|------|--------|
+| Reused clips (~35) | Kokoro `am_echo` if installed, else Edge GuyNeural, cached wav |
+| Extra sentence | Edge TTS (free) |
 
 ```bash
-python3 voice/notify.py bake --engine kokoro   # once, if kokoro installed
-python3 voice/notify.py bake                   # Edge fallback
-bash .agents/scripts/say.sh done "Committed overlay"
+python3 voice/notify.py list
+python3 voice/notify.py bake
+bash .agents/scripts/say.sh done "Committed thirty five clips"
+bash .agents/scripts/say.sh question "Ship kpack or wait"
 ```
 
-Copied from DocuVoice (`app/tts_engine.py`): Edge stream + Kokoro pipeline. No karaoke/timings.
-
-`pip install edge-tts` (required for summaries). Optional: `pip install kokoro soundfile numpy`.
+See `.agents/skills/speak-status/SKILL.md` for when to use which clip.

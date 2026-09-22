@@ -1,0 +1,24 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if test -x .agents/scripts/say.sh; then bash .agents/scripts/say.sh start; fi"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if test -f voice/speak_turn.py; then python3 voice/speak_turn.py; elif test -x .agents/scripts/say.sh; then bash .agents/scripts/say.sh done; fi"
+          }
+        ]
+      }
+    ]
+  }
+}
